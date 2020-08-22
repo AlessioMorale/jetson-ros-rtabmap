@@ -1,0 +1,5 @@
+#!/bin/bash
+source ./utils/get_versions_tags 
+docker pull $sourceimage
+echo building $docker_tag
+docker build -t $docker_tag --build-arg sourceimage=$sourceimage .

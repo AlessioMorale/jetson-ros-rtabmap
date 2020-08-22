@@ -1,0 +1,3 @@
+#!/bin/bash
+source ./utils/get_versions_tags
+docker push $docker_tag
