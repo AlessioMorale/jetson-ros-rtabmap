@@ -1,0 +1,4 @@
+- git:
+    local-name: rtabmap_ros
+    uri: https://github.com/introlab/rtabmap_ros.git
+    version: 0.20.0-melodic
