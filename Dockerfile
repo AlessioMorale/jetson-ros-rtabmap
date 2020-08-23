@@ -60,7 +60,7 @@ COPY ./buildfiles/* /ros_rtabmap_ws/
 WORKDIR /ros_rtabmap_ws
 RUN for i in *.rosinstall; do echo - $i && vcs import src < `echo $i`; done
 
-RUN source /docker-entrypoint.sh && rosdep install --from-paths src --ignore-src --rosdistro melodic -y --skip-keys='python3-opencv opencv libopencv-dev libopencv rviz rtabmap' --simulate && apt-get clean autoclean -y
+RUN source /docker-entrypoint.sh && rosdep install --from-paths src --ignore-src --rosdistro melodic -y --skip-keys='python3-opencv opencv libopencv-dev libopencv rviz rtabmap' && apt-get clean autoclean -y
 
 RUN source /docker-entrypoint.sh && catkin config -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.6m.so  -DRTABMAP_GUI=OFF && catkin build --no-status --interleave -v
 
