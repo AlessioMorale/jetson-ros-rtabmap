@@ -1,7 +1,7 @@
 # naming for the docker image to be generated
 export base_name=alessiomorale/jetson-ros-melodic-rtabmap
 export base_tag=r32.4.2-cv-4.3.0
-source_version=0.3.0
+source_version=0.4.0
 
 # base image used to build jetson-ros-melodic-perception
 export sourceimage="alessiomorale/jetson-ros-melodic-perception:"${base_tag}_${source_version}
