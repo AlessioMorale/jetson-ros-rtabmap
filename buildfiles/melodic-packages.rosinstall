@@ -1,4 +1,12 @@
 - git:
     local-name: rtabmap_ros
     uri: https://github.com/introlab/rtabmap_ros.git
-    version: 0.20.0-melodic
+    version: 3df4648b14643361fe49aa9743bf019410bf7dd1
+- git:
+    local-name: rtabmap
+    uri: https://github.com/introlab/rtabmap.git
+    version: 775c9318d333aa09a00ee1ae06c6664eb1b83265
+- git:
+    local-name: find_object_2d
+    uri: https://github.com/introlab/find_object_2d-release.git
+    version: release/noetic/find_object_2d/0.6.3-5

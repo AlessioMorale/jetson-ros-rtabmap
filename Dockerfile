@@ -42,17 +42,6 @@ RUN git clone https://github.com/ethz-asl/libpointmatcher.git && \
     cd && \
     rm -r libpointmatcher
 
-# Build RTAB-Map project
-RUN source /docker-entrypoint.sh && \
-    git clone https://github.com/introlab/rtabmap.git && \
-    cd rtabmap/build && \
-    cmake .. && \
-    make -j$(nproc) && \
-    make install && \
-    cd ../.. && \
-    rm -r rtabmap && \
-    ldconfig
-
 RUN mkdir -p /ros_rtabmap_ws/src
 COPY ./buildfiles/* /ros_rtabmap_ws/
 
@@ -62,7 +51,7 @@ RUN for i in *.rosinstall; do echo - $i && vcs import src < `echo $i`; done
 
 RUN source /docker-entrypoint.sh && rosdep install --from-paths src --ignore-src --rosdistro melodic -y --skip-keys='python3-opencv opencv libopencv-dev libopencv rviz rtabmap' && apt-get clean autoclean -y
 
-RUN source /docker-entrypoint.sh && catkin config -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.6m.so  -DRTABMAP_GUI=OFF && catkin build --no-status --interleave -v
+RUN source /docker-entrypoint.sh && catkin config -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.6m.so  -DRTABMAP_GUI=OFF && catkin build --no-status --interleave
 
 # Set up entrypoint
 RUN echo "source /ros_rtabmap_ws/devel/setup.bash" >> /init_workspaces
