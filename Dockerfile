@@ -4,9 +4,25 @@ FROM $sourceimage
 # Install rtabmap & prerequisites https://github.com/introlab/rtabmap/blob/master/docker/bionic/Dockerfile
 WORKDIR /root/
 ARG BUILD_JOBS="6"
-
-RUN sudo apt-get update && sudo apt-get install ros-melodic-libg2o ros-melodic-octomap ros-melodic-octomap-ros ros-melodic-octomap-server liblapack-dev libf2c2-dev -y --no-install-recommends &&  apt-get clean autoclean -y
 SHELL ["/bin/bash", "-c"]
+
+RUN sudo apt-get update && \
+    sudo apt-get install \
+    ros-melodic-libg2o \
+    ros-melodic-octomap \
+    ros-melodic-octomap-ros \
+    ros-melodic-octomap-server \
+    liblapack-dev \
+    libf2c2-dev \
+    libsuitesparse-dev \
+    libceres-dev xorg-dev \
+    libglu1-mesa-dev \
+    wget \
+    libopenexr22 \
+    libopenexr-dev \
+    -y --no-install-recommends && \
+    apt-get clean autoclean -y
+
 
 # GTSAM
 RUN git clone https://bitbucket.org/gtborg/gtsam.git && \
@@ -47,26 +63,6 @@ RUN git clone https://github.com/ethz-asl/libpointmatcher.git && \
     make install && \
     cd && \
     rm -r libpointmatcher
-
-RUN apt-get update && \
-    apt-get install libsuitesparse-dev libceres-dev xorg-dev libglu1-mesa-dev wget libopenexr22 libopenexr-dev -y --no-install-recommends && \
-    apt-get clean autoclean -y
-
-RUN git clone https://github.com/AlessioMorale/g2o.git && \
-    cd g2o && \
-    git checkout fix_arm_targets && \
-    mkdir build && \
-    cd build && \
-    cmake -DBUILD_WITH_MARCH_NATIVE=OFF \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DG2O_BUILD_APPS=OFF \
-    -DG2O_BUILD_EXAMPLES=OFF \
-    -DG2O_USE_OPENGL=OFF \
-    .. && \
-    make -j${BUILD_JOBS} && \
-    make install && \
-    cd && \
-    rm -r g2o
 
 RUN mkdir -p /ros_rtabmap_ws/src
 COPY ./buildfiles/* /ros_rtabmap_ws/
