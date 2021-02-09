@@ -1,5 +1,7 @@
 #!/bin/bash
-source ./utils/get_versions_tags 
+source ./environment
 docker pull $sourceimage
+docker pull $docker_latest || true
 echo building $docker_tag
-docker build -t $docker_tag --build-arg sourceimage=$sourceimage .
+docker build -t $docker_tag -t $docker_latest \
+    --build-arg sourceimage=$sourceimage .

@@ -1,3 +1,4 @@
 #!/bin/bash
-source ./utils/get_versions_tags
+source ./environment
 docker push $docker_tag
+docker push $docker_latest

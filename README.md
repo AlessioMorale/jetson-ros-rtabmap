@@ -1,4 +1,4 @@
-# jetson-ros-dockers: jetson-ros-melodic-perception
+# jetson-ros-dockers: jetson-ros-perception
 A docker container to be used to build and execute ros workspaces based on ros-perception for L4T/arm64
 
 To build the repository on an amd64 workstation you can use the following script.

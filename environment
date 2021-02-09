@@ -1,0 +1,9 @@
+#image to be built
+export image_name='alessiomorale/jetson-ros-rtabmap'
+export image_base_tag=melodic_r32.4.4_cv4.4.0
+
+export sourceimage=alessiomorale/jetson-ros-perception:melodic_r32.4.4_cv4.4.0_1.1.3
+
+#tags built with this pipeline.
+export docker_tag=${image_name}:${image_base_tag}_${image_version}
+export docker_latest=${image_name}:${image_base_tag}_latest
