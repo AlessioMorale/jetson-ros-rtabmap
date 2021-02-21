@@ -26,6 +26,10 @@ jobs:
         bump_each_commit: true
     - name: Build the Docker image
       env:
+        BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+        BINTRAY_PACKAGE_PATH: ${{ secrets.BINTRAY_PACKAGE_PATH }}
+        BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+        CACHE_ARCHIVE: ${{ secrets.CACHE_ARCHIVE }}
         image_version: ${{ steps.semver_step.outputs.version_tag }}
       run: |
         echo ${image_version}
