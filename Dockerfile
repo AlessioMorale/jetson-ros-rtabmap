@@ -6,6 +6,12 @@ WORKDIR /root/
 ARG BUILD_JOBS="6"
 SHELL ["/bin/bash", "-c"]
 
+RUN --mount=type=secret,id=secrets,dst=/secrets \
+    --mount=type=cache,target=/root/ccache \
+    source /secrets && \
+    source /root/setup_ccache && \
+    download_cache
+
 RUN sudo apt-get update && \
     sudo apt-get install \
     ros-melodic-libg2o \
