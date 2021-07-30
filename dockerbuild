@@ -1,16 +1,15 @@
 #!/bin/bash
 source ./environment
-docker pull $sourceimage
+
+echo creating secret
 
 [ -e secrets.txt ] && rm secrets.txt
 
-echo "export BINTRAY_API_KEY=$BINTRAY_API_KEY" >> secrets.txt
-echo "export BINTRAY_PACKAGE_PATH=$BINTRAY_PACKAGE_PATH" >> secrets.txt
-echo "export BINTRAY_USER=$BINTRAY_USER" >> secrets.txt
+echo "export CACHE_GIT_URL=$CACHE_GIT_URL" >> secrets.txt
 echo "export CACHE_ARCHIVE=$CACHE_ARCHIVE" >> secrets.txt
+echo "export CACHE_BRANCH=$CACHE_BRANCH" >> secrets.txt
 
 
 DOCKER_BUILDKIT=1 docker build -t $docker_tag -t $docker_latest \
-    --build-arg sourceimage=$sourceimage \
     --secret id=secrets,src="$(pwd)/secrets.txt" \
     .

@@ -1,16 +1,11 @@
-ARG sourceimage
-FROM $sourceimage
+FROM alessiomorale/jetson-ros-perception:melodic_r32.4.4_cv4.4.0_2
 
 # Install rtabmap & prerequisites https://github.com/introlab/rtabmap/blob/master/docker/bionic/Dockerfile
 WORKDIR /root/
-ARG BUILD_JOBS="6"
 SHELL ["/bin/bash", "-c"]
 
-RUN --mount=type=secret,id=secrets,dst=/secrets \
-    --mount=type=cache,target=/root/ccache \
-    source /secrets && \
-    source /root/setup_ccache && \
-    download_cache
+ENV CCACHE_ROOT_FOLDER=/ccache
+RUN mkdir -p ${CCACHE_ROOT_FOLDER}
 
 RUN sudo apt-get update && \
     sudo apt-get install \
@@ -29,10 +24,11 @@ RUN sudo apt-get update && \
     -y --no-install-recommends && \
     apt-get clean autoclean -y
 
+ARG BUILD_JOBS="6"
 
 # GTSAM
 RUN --mount=type=secret,id=secrets,dst=/secrets \
-    --mount=type=cache,target=/root/ccache \
+    --mount=type=cache,id=rtabmap,target=/ccache \
     source /secrets && \
     source /root/setup_ccache && \
     download_cache && \
@@ -50,7 +46,7 @@ RUN --mount=type=secret,id=secrets,dst=/secrets \
 
 # libpointmatcher
 RUN --mount=type=secret,id=secrets,dst=/secrets \
-    --mount=type=cache,target=/root/ccache \
+    --mount=type=cache,id=rtabmap,target=/ccache \
     source /secrets && \
     source /root/setup_ccache && \
     git clone https://github.com/ethz-asl/libnabo.git && \
@@ -71,7 +67,7 @@ RUN --mount=type=secret,id=secrets,dst=/secrets \
     rm -r libnabo
 
 RUN --mount=type=secret,id=secrets,dst=/secrets \
-    --mount=type=cache,target=/root/ccache \
+    --mount=type=cache,id=rtabmap,target=/ccache \
     source /secrets && \
     source /root/setup_ccache && \
     git clone https://github.com/ethz-asl/libpointmatcher.git && \
@@ -87,18 +83,18 @@ RUN --mount=type=secret,id=secrets,dst=/secrets \
     rm -r libpointmatcher
 
 RUN mkdir -p /ros_rtabmap_ws/src
-COPY ./buildfiles/* /ros_rtabmap_ws/
+COPY ./resources/* /ros_rtabmap_ws/
 
 # build the workspace
 WORKDIR /ros_rtabmap_ws
 RUN for i in *.rosinstall; do echo - $i && vcs import src < `echo $i`; done
 
 RUN source /docker-entrypoint.sh && \
-    rosdep install --from-paths src --ignore-src --rosdistro melodic -y --skip-keys='python3-opencv opencv libopencv-dev libopencv rviz rtabmap' && \
+    rosdep install --from-paths src --ignore-src --rosdistro melodic -y --skip-keys='rviz rtabmap' && \
     apt-get clean autoclean -y
 
 RUN --mount=type=secret,id=secrets,dst=/secrets \
-    --mount=type=cache,target=/root/ccache \
+    --mount=type=cache,id=rtabmap,target=/ccache \
     source /secrets && \
     source /root/setup_ccache && \
     source /docker-entrypoint.sh && \
@@ -111,7 +107,8 @@ RUN --mount=type=secret,id=secrets,dst=/secrets \
     -DWITH_FREENECT=OFF \
     -DWITH_FREENECT2=OFF \
     -DWITH_G2O=ON \
-    -DWITH_QT=OFF && \
+    -DWITH_QT=OFF \
+    -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda/ && \
     time catkin build --no-status --interleave -j${BUILD_JOBS} && \
     upload_cache
 
