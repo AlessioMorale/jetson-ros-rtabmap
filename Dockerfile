@@ -1,4 +1,4 @@
-FROM alessiomorale/jetson-ros-perception:melodic_r32.4.4_cv4.4.0_2
+FROM alessiomorale/jetson-ros-perception:melodic_r32.5.0_cv4.4.0_2.0.2
 
 # Install rtabmap & prerequisites https://github.com/introlab/rtabmap/blob/master/docker/bionic/Dockerfile
 WORKDIR /root/
